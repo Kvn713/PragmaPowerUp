@@ -1,34 +1,53 @@
 package co.com.pragma.crediya.r2dbc;
 
+import co.com.pragma.crediya.model.user.User;
+import co.com.pragma.crediya.r2dbc.entities.UserEntity;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
+import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.test.context.ContextConfiguration;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
+@ContextConfiguration(classes = {UserReactiveRepositoryAdapter.class, RoleReactiveRepositoryAdapter.class})
 @ExtendWith(MockitoExtension.class)
 class MyReactiveRepositoryAdapterTest {
     // TODO: change four you own tests
 
     @InjectMocks
-    UserReactiveRepositoryAdapter repositoryAdapter;
+    UserReactiveRepositoryAdapter userRepositoryAdapter;
+
+    @InjectMocks
+    RoleReactiveRepositoryAdapter roleRepositoryAdapter;
 
     @Mock
-    UserReactiveRepository repository;
+    UserReactiveRepository userRepository;
+
+    @Mock
+    RoleReactiveRepository roleRepository;
 
     @Mock
     ObjectMapper mapper;
 
-    /*
+/*
     @Test
     void mustFindValueById() {
 
-        when(repository.findById("1")).thenReturn(Mono.just("test"));
+        when(userRepository.findById("1")).thenReturn(Mono.just("test"));
         when(mapper.map("test", Object.class)).thenReturn("test");
 
-        Mono<Object> result = repositoryAdapter.findById("1");
+        Mono<Object> result = userRepositoryAdapter.findById("1");
 
         StepVerifier.create(result)
                 .expectNextMatches(value -> value.equals("test"))
@@ -57,19 +76,37 @@ class MyReactiveRepositoryAdapterTest {
         StepVerifier.create(result)
                 .expectNextMatches(value -> value.equals("test"))
                 .verifyComplete();
-    }
+    }*/
+
 
     @Test
-    void mustSaveValue() {
-        when(repository.save("test")).thenReturn(Mono.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void saveUserTest() {
+        BigInteger userId = new BigInteger("1");
+        User user = new User(new BigInteger("1"), "John", "Doe",
+                "01-01-2001","Calle 123", "1234567890"
+                ,"correo@email.com", new BigDecimal("12000"), "123456789", 1L);
+        UserEntity userEntity = new UserEntity();
+        userEntity.setIdUsuario(userId);
+        userEntity.setNombres("John");
 
-        Mono<Object> result = repositoryAdapter.save("test");
+        when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
+        when(userRepository.save(userEntity)).thenReturn(Mono.just(userEntity));
+        when(mapper.mapBuilder(eq(userEntity), eq(User.UserBuilder.class))).thenReturn(user.toBuilder());
+
+        Mono<User> result = userRepositoryAdapter.save(user);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(savedUser ->
+                        savedUser != null &&
+                                savedUser.getIdUsuario().equals(userId) &&
+                                savedUser.getNombres().equals("John"))
                 .verifyComplete();
+
+        verify(userRepository).save(userEntity);
+        verify(mapper).map(user, UserEntity.class);
+        verify(mapper).mapBuilder(userEntity, User.UserBuilder.class);
+
     }
 
-     */
+
 }

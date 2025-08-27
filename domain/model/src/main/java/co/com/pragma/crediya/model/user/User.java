@@ -14,7 +14,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class User {
-
+    private BigInteger idUsuario;
     private String nombres;
     private String apellidos;
     private String fechaNacimiento;

@@ -29,3 +29,10 @@ adapters:
     database: Autenticacion
     username: root
     password: P@55w0rd
+spring-doc:
+  swagger-ui:
+    path: /swagger-ui.html
+logging:
+  level:
+    root: INFO
+    co.com.pragma.crediya: TRACE
