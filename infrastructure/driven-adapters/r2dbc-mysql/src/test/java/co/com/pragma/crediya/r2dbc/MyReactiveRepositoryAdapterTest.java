@@ -2,13 +2,16 @@ package co.com.pragma.crediya.r2dbc;
 
 import co.com.pragma.crediya.model.user.User;
 import co.com.pragma.crediya.r2dbc.entities.UserEntity;
+import co.com.pragma.crediya.r2dbc.repository.RoleReactiveRepository;
+import co.com.pragma.crediya.r2dbc.repository.RoleReactiveRepositoryAdapter;
+import co.com.pragma.crediya.r2dbc.repository.UserReactiveRepository;
+import co.com.pragma.crediya.r2dbc.repository.UserReactiveRepositoryAdapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.test.context.ContextConfiguration;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -82,12 +85,13 @@ class MyReactiveRepositoryAdapterTest {
     @Test
     void saveUserTest() {
         BigInteger userId = new BigInteger("1");
-        User user = new User(new BigInteger("1"), "John", "Doe",
-                "01-01-2001","Calle 123", "1234567890"
-                ,"correo@email.com", new BigDecimal("12000"), "123456789", 1L);
+        User user = new User(userId, "John", "Doe",
+                "01-01-2001", "Calle 123", "1234567890"
+                , "correo@email.com", new BigDecimal("12000"),
+                "123456789", 1L, "password");
         UserEntity userEntity = new UserEntity();
-        userEntity.setIdUsuario(userId);
-        userEntity.setNombres("John");
+        userEntity.setIdUser(userId);
+        userEntity.setName("John");
 
         when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(Mono.just(userEntity));
@@ -98,14 +102,36 @@ class MyReactiveRepositoryAdapterTest {
         StepVerifier.create(result)
                 .expectNextMatches(savedUser ->
                         savedUser != null &&
-                                savedUser.getIdUsuario().equals(userId) &&
-                                savedUser.getNombres().equals("John"))
+                                savedUser.getIdUser().equals(userId) &&
+                                savedUser.getName().equals("John"))
                 .verifyComplete();
 
         verify(userRepository).save(userEntity);
         verify(mapper).map(user, UserEntity.class);
         verify(mapper).mapBuilder(userEntity, User.UserBuilder.class);
 
+    }
+
+    @Test
+    void validateDocumentTest() {
+        BigInteger userId = new BigInteger("1");
+        User user = new User(userId, "John", "Doe",
+                "01-01-2001", "Calle 123", "1234567890"
+                , "correo@email.com", new BigDecimal("12000"),
+                "123456789", 1L, "password");
+        UserEntity userEntity = new UserEntity();
+        userEntity.setIdUser(userId);
+        userEntity.setName("John");
+
+        when(mapper.map(user, UserEntity.class)).thenReturn(userEntity);
+        when(userRepository.save(userEntity)).thenReturn(Mono.just(userEntity));
+        when(mapper.mapBuilder(eq(userEntity), eq(User.UserBuilder.class))).thenReturn(user.toBuilder());
+
+        Mono<Boolean> result = userRepositoryAdapter.validateDocument("123456789");
+
+        StepVerifier.create(result)
+                .expectNextMatches(savedUser -> savedUser.equals(true))
+                .verifyComplete();
     }
 
 

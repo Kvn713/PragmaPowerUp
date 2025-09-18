@@ -9,7 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-@Table("Usuario")
+@Table("User")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -17,21 +17,18 @@ import java.math.BigInteger;
 @Builder
 public class UserEntity {
     @Id
-    @Column("id_usuario")
-    private BigInteger idUsuario;
-    private String nombres;
-    private String apellidos;
-    @Column("fecha_nacimiento")
-    private String fechaNacimiento;
-    private String direccion;
-    private String telefono;
-    @Column("correo_electronico")
-    private String correoElectronico;
-    @Column("salario_base")
-    private BigDecimal salarioBase;
-    @Column("documento_identidad")
-    private String documentoIdentidad;
-    @Column("rol_id")
-    private Long rolId;
+    @Column("id_user")
+    private BigInteger idUser;
+    private String name;
+    private String lastName;
+    private String birthday;
+    private String address;
+    private String phone;
+    private String email;
+    private BigDecimal salary;
+    private String document;
+    @Column("role_id")
+    private Long roleId;
+    private String password;
 
 }

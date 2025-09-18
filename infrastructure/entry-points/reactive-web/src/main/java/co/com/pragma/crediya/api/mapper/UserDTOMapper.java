@@ -1,7 +1,7 @@
 package co.com.pragma.crediya.api.mapper;
 
-import co.com.pragma.crediya.api.dto.CreateUserDTO;
-import co.com.pragma.crediya.api.dto.ResponseUserDTO;
+import co.com.pragma.crediya.api.dto.request.CreateUserDTO;
+import co.com.pragma.crediya.api.dto.response.ResponseUserDTO;
 import co.com.pragma.crediya.model.user.User;
 import org.mapstruct.Mapper;
 

@@ -13,6 +13,6 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class Role {
     private Long uniqueId;
-    private String nombre;
-    private String descripcion;
+    private String name;
+    private String description;
 }

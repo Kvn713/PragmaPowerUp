@@ -10,7 +10,8 @@ spring:
       enabled: true
       path: "/h2"
   profiles:
-    include: null
+    #include: null
+    active: dev
 management:
   endpoints:
     web:
@@ -36,3 +37,7 @@ logging:
   level:
     root: INFO
     co.com.pragma.crediya: TRACE
+jwt:
+  secret: "ZyF3gaQO8sop7Aw1TYlSEBo5atFxxq946345r98tfvfv7i673123r124r43"
+  expiration: 3600
+  issuer: "Autenticacion"
