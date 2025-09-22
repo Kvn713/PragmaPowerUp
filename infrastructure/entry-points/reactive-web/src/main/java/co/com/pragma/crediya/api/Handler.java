@@ -63,7 +63,6 @@ public class Handler {
                         .bodyValue(error.getMessage()));
     }
 
-
     public Mono<ServerResponse> login(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(LoginRequestDTO.class)
                 .flatMap(exceptionHandler::exceptionHandler)

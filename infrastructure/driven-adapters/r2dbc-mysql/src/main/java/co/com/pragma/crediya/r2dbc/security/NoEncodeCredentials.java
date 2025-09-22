@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 @Component
-@Profile({"dev", "local"})
+//@Profile({"dev", "local"})
 public class NoEncodeCredentials implements EncodeCredentials {
 
     @Override
